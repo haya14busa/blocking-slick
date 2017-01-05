@@ -4,10 +4,11 @@ import java.sql.Connection
 
 import slick.ast.{CompiledStatement, Node, ResultSetMapping}
 import slick.dbio.{Effect, NoStream, SynchronousDatabaseAction}
-import slick.jdbc.{ActionBasedSQLInterpolation, JdbcBackend, JdbcProfile, JdbcResultConverterDomain}
+import slick.driver.{JdbcDriver, JdbcProfile}
+import slick.jdbc.{ActionBasedSQLInterpolation, JdbcBackend, JdbcResultConverterDomain}
 import slick.lifted.{FlatShapeLevel, Query, Rep, Shape}
-import slick.relational._
-import slick.sql.{SqlAction, SqlStreamingAction}
+import slick.profile._
+import slick.relational.{CompiledMapping, ResultConverter}
 import slick.util.SQLBuilder
 
 import scala.language.existentials
@@ -16,10 +17,12 @@ import scala.language.reflectiveCalls
 import scala.language.implicitConversions
 
 trait BlockingRelationalProfile extends RelationalProfile {
+  self: RelationalDriver =>
   trait BlockingAPI extends API {}
 }
 
 trait BlockingJdbcProfile extends JdbcProfile with BlockingRelationalProfile {
+  self: JdbcDriver =>
 
   val blockingApi = new BlockingAPI with ImplicitColumnTypes {}
   implicit def actionBasedSQLInterpolation(s: StringContext) = new ActionBasedSQLInterpolation(s)
