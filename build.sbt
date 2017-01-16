@@ -2,9 +2,11 @@ name := "blocking-slick"
 
 organization := "com.github.takezoe"
 
-version := "0.0.4-SNAPSHOT"
+version := "0.0.4"
 
 scalaVersion := "2.11.8"
+
+crossScalaVersions := List("2.11.8", "2.12.1")
 
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick"     % "3.1.1",
@@ -21,6 +23,8 @@ publishTo <<= version { (v: String) =>
 }
 
 scalacOptions := Seq("-deprecation", "-feature")
+
+fork in Test := true
 
 publishArtifact in Test := false
 

@@ -4,6 +4,7 @@ import java.sql.Connection
 
 import slick.SlickException
 import slick.ast.{CompiledStatement, Node, ResultSetMapping}
+import slick.profile.BasicStreamingAction
 import slick.dbio.{Effect, NoStream, SynchronousDatabaseAction}
 import slick.driver.{JdbcDriver, JdbcProfile}
 import slick.jdbc.{ActionBasedSQLInterpolation, JdbcBackend, JdbcResultConverterDomain}
@@ -201,7 +202,7 @@ trait BlockingJdbcProfile extends JdbcProfile with BlockingRelationalProfile wit
       withSession { s => s.withTransaction(f(s)) }
   }
 
-  implicit class SqlStreamingActionInvoker[R](action: SqlStreamingAction[Vector[R], R, Effect]){
+  implicit class SqlStreamingActionInvoker[R, E <: Effect](action: BasicStreamingAction[Vector[R], R, E]){
     def first(implicit s: JdbcBackend#Session): R = slick.SynchronousDatabaseRunner.first(action)
     def firstOption(implicit s: JdbcBackend#Session): Option[R] = slick.SynchronousDatabaseRunner.firstOption(action)
     def list(implicit s: JdbcBackend#Session): List[R] = slick.SynchronousDatabaseRunner.list(action)
